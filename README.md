@@ -159,9 +159,7 @@ jQuery('#table').mDatatable({
   columns: [
     { field: "id" },
     { field: "username" },
-    { field: "full_name" },
-    { field: "created_at" },
-    { field: "updated_at" }
+    { field: "full_name" }
   ],
   sortable: false,
   pagination: true
