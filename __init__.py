@@ -7,8 +7,12 @@ import re
 import inspect
 import math
 
+# BOOLEAN_FIELDS = (
+#     "search.regex", "searchable", "orderable", "regex"
+# )
+
 BOOLEAN_FIELDS = (
-    "search.regex", "searchable", "orderable", "regex"
+    "filterable", "sortable"
 )
 
 
@@ -153,10 +157,10 @@ class DataTableMetronic(object):
         # if callable(self.search_func) and search.get("value", None):
         #     query = self.search_func(query, str(search["value"]))
 
-        if callable(self.search_func) and search.get("generalSearch", None):
-            query = self.search_func(query, str(search["generalSearch"]))
+        if callable(self.search_func) and search.get("q", None):
+            query = self.search_func(query, str(search["q"]))
 
-            del search["generalSearch"]
+            del search["q"]
 
         """
         for order in ordering.values():
