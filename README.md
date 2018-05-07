@@ -62,7 +62,7 @@ class User(Model):
 
 ```python
 from flask import Flask, request, jsonify, render_template
-from orator_datatable import DataTableMetronic
+from orator_datatable_metronic import DataTableMetronic
 import datetime, json
 
 from model import User
@@ -89,18 +89,18 @@ def index():
     
 @app.route("/datatables")
 def datatable():
-    raw_args=request.query_string
-    args=request.args.to_dict()
-    UserQuery= User.where_raw('id > -1')
-    columns= User.getColumns()
-    table = DataTableMetronic(request.args.to_dict(), User, UserQuery, columns)
+  raw_args=request.query_string
+  args=request.args.to_dict()
+  UserQuery= User.where_raw('id > -1')
+  columns= User.getColumns()
+  table = DataTableMetronic(request.args.to_dict(), User, UserQuery, columns)
     
-    # enable search 
-    table.searchable(lambda queryset, user_input: datatable_search_orator(queryset, user_input))
+  # enable search 
+  table.searchable(lambda queryset, user_input: datatable_search_orator(queryset, user_input))
 
-    # return as dictionary
-    results= table.json()
-    # convert datetime.datetime entry to string
+  # return as dictionary
+  results= table.json()
+  # convert datetime.datetime entry to string
   results= json_response_converter(results)
 
   # send result
@@ -134,17 +134,37 @@ if __name__ == "__main__":
 
 <!-- load jQuery Datatable -->
 <script type="text/javascript">
-jQuery("#table").dataTable({
-  serverSide: true,
-  processing: true,
-  ajax: "/datatables",
+jQuery('#table').mDatatable({
+  data: {
+    type: 'remote',
+    source: {
+      read: {
+        url: "/datatables",
+        method: 'GET',
+        params: {
+          // custom parameters
+          // generalSearch: ''
+        }
+      }
+    },
+    pageSize: 10,
+    saveState: {
+      cookie: true,
+      webstorage: true
+    },
+    serverPaging: true,
+    serverFiltering: true,
+    serverSorting: true
+  },
   columns: [
-    { data: "id" },
-    { data: "username" },
-      { data: "full_name" },
-      { data: "created_at" },
-      { data: "updated_at" }
-  ]
+    { field: "id" },
+    { field: "username" },
+    { field: "full_name" },
+    { field: "created_at" },
+    { field: "updated_at" }
+  ],
+  sortable: false,
+  pagination: true
 });
 </script>
 ```
